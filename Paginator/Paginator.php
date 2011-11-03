@@ -42,8 +42,15 @@ class Paginator
     /**
      * @param Symfony\Component\HttpFoundation\Request $request
      */
-    public function __construct(Request $request, AdapterFactory $adapterFactory)
+    public function __construct($container, AdapterFactory $adapterFactory)
     {
+        // dirty console command fix
+        if($container->isScopeActive("request")) {
+            $request = $container->get('request');
+        } else {
+            return;
+        }
+        
         $this->adapterFactory = $adapterFactory;
 
         $paginatorId = $request->get('paginatorId');
